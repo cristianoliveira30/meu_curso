@@ -1,13 +1,16 @@
 <?php
 ob_start();
 ?>
-<h2>Fale conosco</h2>
 <form>
-    <label>Nome:</label><br>
-    <input type="text" name="nome"><br>
-    <label>Mensagem:</label><br>
-    <textarea name="mensagem"></textarea><br>
-    <button>Enviar</button>
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <div class="card-header">Contato</div>
+            <div class="card-body">
+                <p class="text-muted">Envie sua mensagem para nós!</p>
+                <button class="btn btn-primary">Enviar</button>
+            </div>
+        </div>
+    </div>
 </form>
 <?php
 $content = ob_get_clean();
