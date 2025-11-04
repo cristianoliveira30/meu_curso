@@ -7,7 +7,7 @@ if (!$name) {
 }
 
 $timestamp = date('Y_m_d_His');
-$filename = __DIR__ . "/migrations/{$timestamp}_{$name}.php";
+$filename = __DIR__ . "/../database/migrations/{$timestamp}_{$name}.php";
 
 $template = <<<PHP
 <?php

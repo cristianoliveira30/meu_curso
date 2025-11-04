@@ -20,7 +20,7 @@ try {
 
     $migrated = $pdo->query("SELECT name FROM migrations")->fetchAll(PDO::FETCH_COLUMN);
 
-    $files = glob(__DIR__ . '/migrations/*.php');
+    $files = glob(__DIR__ . '/../database/migrations/*.php');
     $executadas = 0;
 
     foreach ($files as $file) {

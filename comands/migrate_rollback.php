@@ -4,8 +4,8 @@ $pdo = new PDO("mysql:host={$config['host']};dbname={$config['dbname']}", $confi
 $migration = $pdo->query("SELECT name FROM migrations ORDER BY id DESC LIMIT 1")->fetchColumn();
 
 if ($migration) {
-    require __DIR__ . "/migrations/{$migration}";
-    $class = require __DIR__ . "/migrations/{$migration}";
+    require __DIR__ . "/../database/migrations/{$migration}";
+    $class = require __DIR__ . "/../database/migrations/{$migration}";
     $class->down($pdo);
     $pdo->exec("DELETE FROM migrations WHERE name = '{$migration}'");
     echo "Rollback executado: {$migration}\n";
