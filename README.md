@@ -1,6 +1,8 @@
 # 🧭 Projeto de E-commerce de Cursos em PHP Puro
 
-Este projeto é uma plataforma de venda de cursos desenvolvida **em PHP puro**, utilizando **HTML, CSS, JavaScript e MySQL**, seguindo uma arquitetura limpa e organizada em camadas.
+Este projeto é uma plataforma de ecomerce desenvolvida **em PHP puro**, utilizando **HTML, CSS, JavaScript e MySQL**, seguindo uma arquitetura limpa e organizada em camadas. 
+Projeto bruto feito sem framework, sem biblioteca, só o bom e velho PHP 💪
+Viva a tradição! ☕
 
 ---
 
