@@ -71,11 +71,14 @@
                   <?php foreach ($chunk as $product): ?>
                     <div class="col-md-3">
                       <div class="card h-100 shadow-sm border-0">
-                        <img src="/<?= htmlspecialchars($product->getImage()) ?>" class="card-img-top" alt="<?= htmlspecialchars($product->getTitle()) ?>">
-                        <div class="card-body">
+                        <img src="/<?= htmlspecialchars($product->getImage()) ?>" 
+                             class="card-img-top mx-auto d-block"
+                             alt="<?= htmlspecialchars($product->getTitle()) ?>"
+                             style="width: 100%; height: 250px; object-fit: contain; background-color: #fff; padding: 10px; border-radius: 10px;">
+                        <div class="card-body text-center">
                           <h5 class="card-title fw-bold"><?= htmlspecialchars($product->getTitle()) ?></h5>
                           <p class="card-text text-muted"><?= htmlspecialchars($product->getShortDescription()) ?></p>
-                          <p class="card-text text-success">R$<?= htmlspecialchars($product->getPrice()) ?></p>
+                          <p class="card-text text-success fw-semibold">R$<?= htmlspecialchars($product->getPrice()) ?></p>
                         </div>
                         <div class="card-footer bg-transparent border-0">
                           <a href="/produto/<?= htmlspecialchars($product->getSlug()) ?>" class="btn btn-dark w-100 my-1 rounded-pill">Ver detalhes</a>
