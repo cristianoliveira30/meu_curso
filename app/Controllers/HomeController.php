@@ -11,7 +11,7 @@ class HomeController
         $service = new ProductsService();
         $products = $service->getAllProducts();
 
-        $title = 'Cursos em destaque';
+        $title = 'Produtos em destaque';
 
         // Retorna os dados para o Router renderizar
         return [

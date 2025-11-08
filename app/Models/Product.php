@@ -10,10 +10,17 @@ class Product
     private $shortDescription;
     private $description;
     private $price;
-    private $stock;
     private $rating;
     private $image;
-    private $supplier;
+
+    public function __construct($data = [])
+    {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
 
     // Getters e Setters
     public function getId() { return $this->id; }
@@ -37,15 +44,9 @@ class Product
     public function getPrice() { return $this->price; }
     public function setPrice($price) { $this->price = $price; }
 
-    public function getStock() { return $this->stock; }
-    public function setStock($stock) { $this->stock = $stock; }
-
     public function getRating() { return $this->rating; }
     public function setRating($rating) { $this->rating = $rating; }
 
     public function getImage() { return $this->image; }
     public function setImage($image) { $this->image = $image; }
-
-    public function getSupplier() { return $this->supplier; }
-    public function setSupplier($supplier) { $this->supplier = $supplier; }
 }

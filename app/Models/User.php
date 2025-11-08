@@ -9,6 +9,7 @@ class User
     public $email;
     public $password;
     public $phone;
+    public $role;
     public $address;
     public $city;
     public $state;

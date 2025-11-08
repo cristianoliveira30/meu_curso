@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Core\Database;
+use App\Models\Product;
 use PDO;
 
 class ProductsRepository
@@ -17,6 +19,32 @@ class ProductsRepository
             $config['password'],
             [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
         );
+    }
+
+    public function create(Product $product)
+    {
+        $pdo = Database::getConnection();
+        $stmt = $this->pdo->prepare("
+            INSERT INTO products (
+                title, slug, category, short_description, description, 
+                price, rating, image, created_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
+        ");
+
+        $stmt->execute([
+            $product->getTitle(),
+            $product->getSlug(),
+            $product->getCategory(),
+            $product->getShortDescription(),
+            $product->getDescription(),
+            $product->getPrice(),
+            $product->getRating(),
+            $product->getImage(),
+        ]);
+
+        $product->setId($pdo->lastInsertId());
+        return $product;
     }
 
     public function findAll(): array

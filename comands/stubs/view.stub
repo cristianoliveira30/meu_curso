@@ -1,9 +1,9 @@
-<?php ob_start(); ?>
-
-<h2>{{name}}</h2>
-<p>Nova view criada com sucesso!</p>
-
-<?php
-$content = ob_get_clean();
-include __DIR__ . '/layout.php';
-?>
+<div class="container">
+    <div class="row">
+        <div class="col d-flex flex-column align-items-center justify-content-center" style="height: 70vh;">
+            <h1 class="display-4 fw-bold text-primary">Nova View</h1>
+            <p class="lead text-muted">Essa página ainda está em desenvolvimento.</p>
+            <a href="/" class="btn btn-dark rounded-pill">Voltar para a Página Inicial</a>
+        </div>
+    </div>
+</div>
