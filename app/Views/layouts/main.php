@@ -13,7 +13,7 @@
     <link href="/css/style.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-light">
     <!-- header -->
     <?php include_once __DIR__ . '/header.php'; ?>
 

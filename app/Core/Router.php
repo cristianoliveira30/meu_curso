@@ -76,11 +76,12 @@ class Router
         if (file_exists($viewPath)) {
             include $viewPath;
         } else {
-            echo "<p>⚠️ View <strong>{$view}</strong> não encontrada.</p>";
-            return;
+            include __DIR__ . '/../Views/not-found.php';
         }
 
         $content = ob_get_clean();
+
+        // Layout principal sempre é renderizado no final
         include __DIR__ . '/../Views/layouts/main.php';
     }
 }

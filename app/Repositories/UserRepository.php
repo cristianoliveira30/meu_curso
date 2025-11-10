@@ -32,9 +32,9 @@ class UserRepository
     {
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare("
-        INSERT INTO users (name, email, password, phone, address, city, state, zip_code, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
-    ");
+            INSERT INTO users (name, email, password, phone, address, city, state, zip_code, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
+        ");
         $stmt->execute([
             $user->name,
             $user->email,

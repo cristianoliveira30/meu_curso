@@ -79,7 +79,7 @@
           </div>
 
           <div class="d-grid">
-            <button type="submit" class="btn btn-primary rounded-pill py-2">Cadastrar</button>
+            <button type="submit" class="btn btn-dark rounded-pill py-2">Cadastrar</button>
           </div>
         </form>
 
