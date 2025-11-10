@@ -21,5 +21,6 @@ class ProductsFactory
         $product->setImage($data['image'] ?? '');
         $product->setSupplier($data['supplier'] ?? '');
         return $product;
+        
     }
 }

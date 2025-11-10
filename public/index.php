@@ -22,3 +22,5 @@ $router->post('/cadastro', 'AuthController@register');
 
 
 $router->dispatch();
+
+
