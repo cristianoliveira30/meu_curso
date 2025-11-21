@@ -53,6 +53,14 @@ class ProductsRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function findById(string $id): ?array
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM products WHERE id = :id LIMIT 1");
+        $stmt->execute(['id' => $id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ?: null;
+    }
+
     public function findBySlug(string $slug): ?array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM products WHERE slug = :slug LIMIT 1");

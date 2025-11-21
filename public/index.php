@@ -8,7 +8,7 @@ $router = new Router();
 
 // Rotas básicas
 $router->get('/', 'HomeController@index');
-$router->get('/contato', function() use ($router) { $router->renderView('contato', ['title' => 'Fale Conosco']); });
+$router->get('/contato', function() use ($router) { $router->renderView('contato', ['title' => 'Contato']); });
 $router->get('/cadastro', function() use ($router) { $router->renderView('/auth/cadastro', ['title' => 'Cadastro']); });
 
 // autenticação
@@ -20,11 +20,15 @@ $router->get('/logout', 'AuthController@logout');
 $router->get('/cadastro', 'AuthController@showRegister');
 $router->post('/cadastro', 'AuthController@register');
 
-// produtos
-$router->get('/produto/adicionar', 'ProductController@indexAdicionar');
-$router->post('/produto/adicionar', 'ProductController@addProduto');
-$router->post('/produto/editar', 'ProductController@indexEditar');
-$router->post('/produto/editar', 'ProductController@editProduto');
+// Produtos — apenas admin pode adicionar ou editar
+$router->get('/produto/adicionar', 'ProductController@indexAdicionar', ['auth', 'admin']);
+$router->post('/produto/adicionar', 'ProductController@addProduto', ['auth', 'admin']);
+$router->post('/produto/editar', 'ProductController@indexEditar', ['auth', 'admin']);
+$router->post('/produto/editar', 'ProductController@editProduto', ['auth', 'admin']);
+
+// Perfil — apenas usuário logado
+$router->get('/perfil', 'UserController@index', ['auth']);
+
 
 $router->dispatch();
 

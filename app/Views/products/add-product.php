@@ -12,7 +12,7 @@ unset($_SESSION['success'], $_SESSION['error'], $_SESSION['errors'], $_SESSION['
 <div class="container my-5">
     <div class="card shadow-sm border-0">
         <div class="card-body p-4">
-            <h2 class="fw-bold mb-4 text-primary">Cadastrar Novo Produto</h2>
+            <h2 class="fw-bold mb-4 text-dark">Cadastrar Novo Produto</h2>
 
             <!-- Mensagens de feedback -->
             <?php if ($success): ?>
@@ -106,7 +106,7 @@ unset($_SESSION['success'], $_SESSION['error'], $_SESSION['errors'], $_SESSION['
 
                     <div class="col-12 d-flex justify-content-between mt-4">
                         <a href="/" class="btn btn-outline-secondary">Voltar</a>
-                        <button type="submit" class="btn btn-primary px-4">Cadastrar Produto</button>
+                        <button type="submit" class="btn btn-dark px-4">Cadastrar Produto</button>
                     </div>
                 </div>
             </form>

@@ -1,4 +1,4 @@
-// modal.js — versão funcional para login e cadastro
+// modal.js — versão universal
 (function () {
   function openModal(modal) {
     if (!modal) return;
@@ -8,16 +8,13 @@
     document.body.classList.add("manual-modal-open");
     document.body.style.overflow = "hidden";
 
-    // guarda elemento que abriu pra retornar foco depois
     modal._trigger = document.activeElement;
 
-    // foco no primeiro input
     const first = modal.querySelector(
       'input, button, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
     if (first) first.focus();
 
-    // trap focus (simples)
     modal.addEventListener("keydown", trapFocus);
   }
 
@@ -30,8 +27,6 @@
     document.body.style.overflow = "";
 
     modal.removeEventListener("keydown", trapFocus);
-
-    // retorna foco para trigger
     if (modal._trigger) modal._trigger.focus();
   }
 
@@ -54,23 +49,31 @@
     }
   }
 
-  // 🔹 Handlers globais
+  // 🔹 Handler global
   document.addEventListener("click", function (e) {
-    // Abrir manualmente (Cadastro ou Login)
+    // ✅ Universal: qualquer elemento com data-modal-target
+    const target = e.target.closest("[data-modal-target]");
+    if (target) {
+      e.preventDefault();
+      const id = target.getAttribute("data-modal-target");
+      const modal = document.getElementById(id);
+      openModal(modal);
+      return;
+    }
+
+    // Compatibilidade antiga (login/cadastro)
     const openCadastro = e.target.closest("#openCadastroBtn");
     const openLogin = e.target.closest("#openLoginBtn");
 
     if (openCadastro) {
       e.preventDefault();
-      const modal = document.getElementById("cadastroModal");
-      openModal(modal);
+      openModal(document.getElementById("cadastroModal"));
       return;
     }
 
     if (openLogin) {
       e.preventDefault();
-      const modal = document.getElementById("loginModal");
-      openModal(modal);
+      openModal(document.getElementById("loginModal"));
       return;
     }
 
@@ -100,16 +103,14 @@
     }
   });
 
-  // 🔹 Acesso global (para uso direto em onclick)
+  // 🔹 Acesso global manual
   window.manualModal = {
     openModal(id) {
       const modal = document.getElementById(id);
-      if (!modal) return;
       openModal(modal);
     },
     closeModal(id) {
       const modal = document.getElementById(id);
-      if (!modal) return;
       closeModal(modal);
     },
     switchModal(fromId, toId) {

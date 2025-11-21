@@ -4,38 +4,46 @@ class Router
 {
     private $routes = [];
 
-    public function get($path, $callback)
+    public function get($path, $callback, $middleware = [])
     {
-        $this->routes['GET'][$path] = $callback;
+        $this->routes['GET'][$path] = ['callback' => $callback, 'middleware' => $middleware];
     }
 
-    public function post($path, $callback)
+    public function post($path, $callback, $middleware = [])
     {
-        $this->routes['POST'][$path] = $callback;
+        $this->routes['POST'][$path] = ['callback' => $callback, 'middleware' => $middleware];
     }
 
     public function dispatch()
     {
         $method = $_SERVER['REQUEST_METHOD'];
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-        // remove o prefixo /public se existir
         $uri = str_replace('/public', '', $uri);
 
-        $callback = $this->routes[$method][$uri] ?? null;
+        $route = $this->routes[$method][$uri] ?? null;
 
-        if (!$callback) {
+        if (!$route) {
             $this->renderView('not-found', ['title' => 'Página não encontrada']);
             return;
         }
 
-        // ✅ Caso o callback seja uma função anônima
+        $callback = $route['callback'];
+        $middlewares = $route['middleware'] ?? [];
+
+        // 🔒 Executa middlewares
+        foreach ($middlewares as $middleware) {
+            $middlewareClass = "\\App\\Core\\Middleware";
+            if (method_exists($middlewareClass, $middleware)) {
+                call_user_func([$middlewareClass, $middleware]);
+            }
+        }
+
+        // ✅ Continua o mesmo comportamento do seu código atual
         if (is_callable($callback)) {
             echo call_user_func($callback);
             return;
         }
 
-        // ✅ Caso o callback seja um controller do tipo "HomeController@index"
         if (is_string($callback)) {
             [$controller, $method] = explode('@', $callback);
             $controllerPath = __DIR__ . '/../Controllers/' . $controller . '.php';
@@ -47,7 +55,6 @@ class Router
 
             require_once $controllerPath;
 
-            // ✅ Usa o namespace correto
             $controllerClass = "App\\Controllers\\{$controller}";
             $controllerInstance = new $controllerClass();
 
@@ -62,7 +69,6 @@ class Router
             return;
         }
     }
-
 
     public function renderView($view, $data = [])
     {
