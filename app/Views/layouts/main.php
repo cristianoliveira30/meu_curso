@@ -5,13 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Minha Loja' ?></title>
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Seu CSS -->
     <link href="/css/style.css" rel="stylesheet">
-    <link href="/css/modal.css" rel="stylesheet">
 </head>
 
 <body class="bg-light">
@@ -27,7 +21,7 @@
     <?php include_once __DIR__ . '/footer.php'; ?>
 
     <!-- scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/style.js"></script>
     <script src="/js/modal.js"></script>
 
     <!-- modais -->
