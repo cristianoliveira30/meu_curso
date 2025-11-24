@@ -12047,3 +12047,84 @@ body.manual-modal-open {
   width: 100%;
   object-fit: cover;
 }
+/* better scroll handling when modal is open */
+body.manual-modal-open { overflow: hidden; padding-right: 0 !important; }
+
+/* ===== Modal do carrinho ===== */
+.cart-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+}
+
+.cart-modal.is-open {
+    display: flex;
+}
+
+.cart-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.cart-modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+    z-index: 1;
+}
+
+.cart-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.cart-modal-close {
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.cart-modal-body {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.cart-product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.cart-product-title {
+    margin: 0 0 4px 0;
+    font-weight: 600;
+}
+
+.cart-product-price {
+    margin: 0;
+    color: #198754;
+    font-weight: 600;
+}
+
+.cart-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+ 

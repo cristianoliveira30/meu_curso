@@ -29,6 +29,21 @@ $router->post('/produto/editar', 'ProductController@editProduto', ['auth', 'admi
 // Perfil — apenas usuário logado
 $router->get('/perfil', 'UserController@index', ['auth']);
 
+// Carrinho
+$router->get('/carrinho', 'CartController@index');
+$router->post('/carrinho/adicionar', 'CartController@add');
+$router->post('/carrinho/remover', 'CartController@remove');
+
+
+// Checkout / pagamento
+$router->get('/checkout', 'CheckoutController@index');
+$router->post('/checkout/calcular-frete', 'CheckoutController@calcularFrete');
+
+// Checkout
+$router->get('/checkout', 'CheckoutController@index');
+$router->post('/checkout/calcular-frete', 'CheckoutController@calcularFrete');
+$router->post('/checkout/confirmar', 'CheckoutController@confirmar'); // 👈 nova
+
 
 $router->dispatch();
 

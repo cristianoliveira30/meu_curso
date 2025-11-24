@@ -30,13 +30,12 @@ class ProductsService
             $errors['category'] = 'A categoria é obrigatória.';
         }
         if (empty($product['description'])) {
-            $errors['description'] = 'A categoria é obrigatória.';
+            $errors['description'] = 'A descrição é obrigatória.';
         }
         if (empty($product['shortDescription'])) {
-            $errors['shortDescription'] = 'A categoria é obrigatória.';
+            $errors['shortDescription'] = 'O resumo é obrigatório.';
         }
 
-        // Se houver erros, lançamos todos de uma vez
         if (!empty($errors)) {
             throw new \Exception(json_encode($errors));
         }
@@ -67,6 +66,15 @@ class ProductsService
         }
 
         return $products;
+    }
+
+    /**
+     * 🔹 Novo: usado pelo CartController
+     */
+    public function getById(int $id): ?Product
+    {
+        $row = $this->repository->findById($id); // o repositório já tem esse método
+        return $row ? ProductsFactory::createFromArray($row) : null;
     }
 
     public function getCourseBySlug(string $slug)
