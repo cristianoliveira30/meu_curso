@@ -7,7 +7,9 @@
 /** @var float       $totalComFrete */
 /** @var array|null  $endereco */
 /** @var string|null $cep */
+/** @var string|null $numero */
 /** @var string      $paymentMethod */
+/** @var string|null $cardLastDigits */
 
 function traduzFormaPagamento(string $method): string {
     switch ($method) {
@@ -31,27 +33,27 @@ function traduzFormaPagamento(string $method): string {
     <div class="table-responsive mb-3">
         <table class="table align-middle">
             <thead>
-            <tr>
-                <th>Produto</th>
-                <th class="text-center">Qtd</th>
-                <th class="text-end">Preço unitário</th>
-                <th class="text-end">Subtotal</th>
-            </tr>
+                <tr>
+                    <th>Produto</th>
+                    <th class="text-center">Qtd</th>
+                    <th class="text-end">Preço unitário</th>
+                    <th class="text-end">Subtotal</th>
+                </tr>
             </thead>
             <tbody>
-            <?php foreach ($items as $item): ?>
-                <?php $product = $item['product']; ?>
-                <tr>
-                    <td><?= htmlspecialchars($product->getTitle()) ?></td>
-                    <td class="text-center"><?= (int) $item['quantity'] ?></td>
-                    <td class="text-end">
-                        R$<?= number_format((float) $product->getPrice(), 2, ',', '.') ?>
-                    </td>
-                    <td class="text-end">
-                        R$<?= number_format($item['subtotal'], 2, ',', '.') ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
+                <?php foreach ($items as $item): ?>
+                    <?php $product = $item['product']; ?>
+                    <tr>
+                        <td><?= htmlspecialchars($product->getTitle()) ?></td>
+                        <td class="text-center"><?= (int) $item['quantity'] ?></td>
+                        <td class="text-end">
+                            R$<?= number_format((float) $product->getPrice(), 2, ',', '.') ?>
+                        </td>
+                        <td class="text-end">
+                            R$<?= number_format($item['subtotal'], 2, ',', '.') ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
@@ -65,6 +67,9 @@ function traduzFormaPagamento(string $method): string {
     <?php if ($endereco): ?>
         <p class="mb-1">
             <?= htmlspecialchars($endereco['logradouro'] ?? '') ?>
+            <?php if (!empty($numero)): ?>
+                , Nº <?= htmlspecialchars($numero) ?>
+            <?php endif; ?>
             <?= !empty($endereco['bairro']) ? ' - ' . htmlspecialchars($endereco['bairro']) : '' ?>
         </p>
         <p class="mb-1">
@@ -79,9 +84,28 @@ function traduzFormaPagamento(string $method): string {
     <?php endif; ?>
 
     <h2 class="h5 mt-4">Forma de pagamento</h2>
-    <p class="mb-3">
+    <p class="mb-2">
         <?= htmlspecialchars(traduzFormaPagamento($paymentMethod)) ?>
+        <?php if ($paymentMethod === 'cartao' && !empty($cardLastDigits)): ?>
+            (final <?= htmlspecialchars($cardLastDigits) ?>)
+        <?php endif; ?>
     </p>
+
+    <?php if ($paymentMethod === 'pix'): ?>
+        <p class="text-muted mb-3">
+            Você escolheu pagar com <strong>Pix</strong>.  
+            Enviaremos as instruções e o QR Code no próximo passo / por e-mail (exemplo).
+        </p>
+    <?php elseif ($paymentMethod === 'boleto'): ?>
+        <p class="text-muted mb-3">
+            Você escolheu pagar com <strong>boleto bancário</strong>.  
+            O boleto será disponibilizado para impressão / envio por e-mail (exemplo).
+        </p>
+    <?php elseif ($paymentMethod === 'cartao'): ?>
+        <p class="text-muted mb-3">
+            Pagamento no <strong>cartão de crédito</strong> processado com sucesso.
+        </p>
+    <?php endif; ?>
 
     <a href="/" class="btn btn-primary">Voltar para a loja</a>
 </section>

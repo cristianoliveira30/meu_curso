@@ -68,4 +68,32 @@ class ProductsRepository
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ?: null;
     }
+
+public function search(string $term): array
+{
+    $term = trim($term);
+
+    if ($term === '') {
+        return [];
+    }
+
+    $sql = "
+        SELECT *
+        FROM products
+        WHERE title LIKE :term
+           OR short_description LIKE :term
+           OR description LIKE :term
+           OR category LIKE :term
+        ORDER BY created_at DESC
+    ";
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([
+        ':term' => '%' . $term . '%',
+    ]);
+
+    // segue o mesmo padrão do findAll(): array associativo
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+ }
 }
+

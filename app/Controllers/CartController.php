@@ -84,8 +84,10 @@ class CartController
         $totalItems = array_sum($_SESSION['cart']);
 
         // Se veio via fetch (AJAX), respondemos JSON
-        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+        if (
+            !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
+        ) {
 
             header('Content-Type: application/json');
             echo json_encode([
@@ -111,6 +113,53 @@ class CartController
         if ($productId && isset($_SESSION['cart'][$productId])) {
             unset($_SESSION['cart'][$productId]);
         }
+
+        header('Location: /carrinho');
+        exit;
+    }
+
+    public function update()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $productId = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
+        $quantity  = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT);
+
+        if (!$quantity || $quantity < 0) {
+            $quantity = 0;
+        }
+
+        // se não veio productId válido, só volta
+        if (!$productId) {
+            header('Location: /carrinho');
+            exit;
+        }
+
+        // se o produto já está no carrinho
+        if (isset($_SESSION['cart'][$productId])) {
+
+            if ($quantity === 0) {
+                // quantidade 0 => remove do carrinho
+                unset($_SESSION['cart'][$productId]);
+            } else {
+                // atualiza a quantidade
+                $_SESSION['cart'][$productId] = $quantity;
+            }
+        }
+
+        header('Location: /carrinho');
+        exit;
+    }
+    public function clear()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // esvazia somente o carrinho
+        $_SESSION['cart'] = [];
 
         header('Location: /carrinho');
         exit;

@@ -20,6 +20,24 @@ $router->get('/logout', 'AuthController@logout');
 $router->get('/cadastro', 'AuthController@showRegister');
 $router->post('/cadastro', 'AuthController@register');
 
+//  BUSCA
+$router->get('/buscar', function () use ($router) {
+    $term = isset($_GET['q']) ? trim($_GET['q']) : '';
+
+    $products = [];
+    if ($term !== '') {
+        $repo = new \App\Repositories\ProductsRepository();
+        $products = $repo->search($term);
+    }
+
+    $router->renderView('buscar', [
+        'title'    => 'Resultados da busca',
+        'term'     => $term,
+        'products' => $products,
+    ]);
+});
+
+
 // Produtos — apenas admin pode adicionar ou editar
 $router->get('/produto/adicionar', 'ProductController@indexAdicionar', ['auth', 'admin']);
 $router->post('/produto/adicionar', 'ProductController@addProduto', ['auth', 'admin']);
@@ -42,7 +60,11 @@ $router->post('/checkout/calcular-frete', 'CheckoutController@calcularFrete');
 // Checkout
 $router->get('/checkout', 'CheckoutController@index');
 $router->post('/checkout/calcular-frete', 'CheckoutController@calcularFrete');
-$router->post('/checkout/confirmar', 'CheckoutController@confirmar'); // 👈 nova
+$router->post('/checkout/confirmar', 'CheckoutController@confirmar'); // 
+
+//  NOVAS ROTAS
+$router->post('/carrinho/atualizar', 'CartController@update');
+$router->post('/carrinho/esvaziar', 'CartController@clear');
 
 
 $router->dispatch();

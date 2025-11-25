@@ -52,12 +52,23 @@ class CheckoutController
      */
     public function index()
     {
-        $title   = 'Finalizar compra';
-        $summary = $this->buildCartSummary();
+        $title         = 'Finalizar compra';
+        $summary       = $this->buildCartSummary();
+
+        // Valores "vazios" para a primeira vez
+        $cep           = null;
+        $numero        = null;
+        $endereco      = null;
+        $frete         = null;
+        $totalComFrete = null;
+        $erroCep       = null;
 
         return [
             'view' => 'checkout', // app/Views/checkout.php
-            'data' => array_merge($summary, compact('title')),
+            'data' => array_merge(
+                $summary,
+                compact('title', 'cep', 'numero', 'endereco', 'frete', 'totalComFrete', 'erroCep')
+            ),
         ];
     }
 
@@ -70,11 +81,12 @@ class CheckoutController
         $title   = 'Finalizar compra';
         $summary = $this->buildCartSummary();
 
-        $cep            = preg_replace('/\D/', '', $_POST['cep'] ?? '');
-        $erroCep        = null;
-        $endereco       = null;
-        $frete          = null;
-        $totalComFrete  = null;
+        $cep           = preg_replace('/\D/', '', $_POST['cep'] ?? '');
+        $numero        = trim($_POST['numero'] ?? '');
+        $erroCep       = null;
+        $endereco      = null;
+        $frete         = null;
+        $totalComFrete = null;
 
         if (strlen($cep) !== 8) {
             $erroCep = 'CEP inválido. Informe 8 dígitos.';
@@ -106,6 +118,7 @@ class CheckoutController
                     // Guardar na sessão para a etapa de confirmação
                     $_SESSION['checkout'] = [
                         'cep'           => $cep,
+                        'numero'        => $numero,
                         'endereco'      => $endereco,
                         'frete'         => $frete,
                         'totalComFrete' => $totalComFrete,
@@ -118,7 +131,7 @@ class CheckoutController
             'view' => 'checkout',
             'data' => array_merge(
                 $summary,
-                compact('title', 'cep', 'endereco', 'frete', 'totalComFrete', 'erroCep')
+                compact('title', 'cep', 'numero', 'endereco', 'frete', 'totalComFrete', 'erroCep')
             ),
         ];
     }
@@ -151,16 +164,17 @@ class CheckoutController
      */
     public function confirmar()
     {
-        $summary     = $this->buildCartSummary();
-        $items       = $summary['items'];
-        $total       = $summary['total'];
-        $totalItems  = $summary['totalItems'];
+        $summary    = $this->buildCartSummary();
+        $items      = $summary['items'];
+        $total      = $summary['total'];
+        $totalItems = $summary['totalItems'];
 
-        $checkoutData   = $_SESSION['checkout'] ?? null;
-        $frete          = $checkoutData['frete'] ?? 0.0;
-        $totalComFrete  = $checkoutData['totalComFrete'] ?? ($total + $frete);
-        $endereco       = $checkoutData['endereco'] ?? null;
-        $cep            = $checkoutData['cep'] ?? null;
+        $checkoutData  = $_SESSION['checkout'] ?? null;
+        $frete         = $checkoutData['frete'] ?? 0.0;
+        $totalComFrete = $checkoutData['totalComFrete'] ?? ($total + $frete);
+        $endereco      = $checkoutData['endereco'] ?? null;
+        $cep           = $checkoutData['cep'] ?? null;
+        $numero        = $checkoutData['numero'] ?? ($_POST['numero'] ?? null);
 
         $paymentMethod = $_POST['payment_method'] ?? null;
 
@@ -171,10 +185,35 @@ class CheckoutController
             exit;
         }
 
+        // Se for cartão, validamos os dados básicos
+        $cardLastDigits = null;
+
+        if ($paymentMethod === 'cartao') {
+            $cardHolder = trim($_POST['card_holder_name'] ?? '');
+            $cardNumber = preg_replace('/\s+/', '', $_POST['card_number'] ?? '');
+            $cardExpiry = trim($_POST['card_expiry'] ?? '');
+            $cardCvv    = trim($_POST['card_cvv'] ?? '');
+
+            if (
+                $cardHolder === '' ||
+                $cardNumber === '' ||
+                $cardExpiry === '' ||
+                $cardCvv === ''
+            ) {
+                $_SESSION['erro_pagamento'] = 'Preencha todos os dados do cartão de crédito.';
+                header('Location: /checkout');
+                exit;
+            }
+
+            // Apenas últimos 4 dígitos para exibir em tela (não guardar cartão inteiro!)
+            $cardLastDigits = substr($cardNumber, -4);
+        }
+
         $title = 'Pedido confirmado';
 
-        // Aqui você pode, no futuro, gravar em banco e limpar o carrinho:
+        // (Opcional) limpar carrinho e dados de checkout:
         // $_SESSION['cart'] = [];
+        // unset($_SESSION['checkout']);
 
         return [
             'view' => 'order-confirmation',
@@ -187,7 +226,9 @@ class CheckoutController
                 'totalComFrete',
                 'endereco',
                 'cep',
-                'paymentMethod'
+                'numero',
+                'paymentMethod',
+                'cardLastDigits'
             ),
         ];
     }
